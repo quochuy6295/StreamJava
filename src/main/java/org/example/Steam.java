@@ -1,11 +1,9 @@
 package org.example;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Main {
+public class Steam {
     public static void main(String[] args) {
 
         List<Student> students = Arrays.asList(
@@ -46,5 +44,31 @@ public class Main {
         //5.  Group The Student By Department Names
         Map<String, List<Student>> depart = students.stream().collect(Collectors.groupingBy(Student::getDept));
         System.out.println(depart);
+
+        //6. Find the department who is having maximum number of students
+        Map.Entry<String, Long> result = students.stream()
+                .collect(Collectors.groupingBy(Student::getDept, Collectors.counting()))
+                .entrySet().stream().max(Map.Entry.comparingByValue()).get();
+
+        System.out.println(result);
+
+        //7. Find the average age of male and female students
+        Map<String, Double> result1 = students.stream().collect(Collectors.groupingBy(Student::getGender, Collectors.averagingInt(Student::getAge)));
+
+        System.out.println(result1);
+
+        //8. Find the highest rank in each department
+        Map<String, Optional<Student>> sdtMap = students.stream()
+                .collect(Collectors.groupingBy(Student::getDept, Collectors.minBy(Comparator.comparing(Student::getRank))));
+
+        System.out.println(sdtMap);
+
+        //9 .Find the student who has second rank
+        Student student = students.stream()
+                .sorted(Comparator.comparing(Student::getRank))
+                .skip(2)
+                .findFirst().get();
+
+        System.out.println(student);
     }
 }
